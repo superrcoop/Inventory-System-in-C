@@ -1,0 +1,626 @@
+/* ********************************************************************
+ Application was compiled in DEV C++ version 5.9.2
+ Last compile date 15/04/15 09:19
+***********************************************************************/
+/* HEADERS  */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+/* PRODUCTDATA STRUCTURE DECLARATION */
+struct productdata {
+	int productID ; /* product ID number  */
+	char productname [30] ; /* product name  */
+	int quantity ; /* product quantity */
+	float price ; /* product price  */
+	int minimumvalue ; /* minimum valvue product should have before reordering  */
+	
+};/* END STURCTURE PRODUCTDATA */
+
+/* DECLARE FUNCTIONS  */
+int login ();
+int addproduct () ;
+int viewproduct ();
+int updproduct ();
+int delproduct ();
+void welcome ();
+int product ();
+int alerts () ;
+/* END OF DECLARATIONS*/
+/* MAIN FUNCTION */
+int main()
+{  
+	system("color e0");            
+	welcome();   
+	login (); 
+	menu ();
+ 	system("PAUSE");	
+return 0;
+} /*  END MAIN */
+
+void welcome () {
+	printf ("\n\n\t\tW\tE\tL\tC\tO\tM\tE\t\n\n") ;
+	printf("\t\t\t\tTO :\n");
+	printf("\n");
+	printf("\t HHHH  HHHHH   HHHHH  HHHHH  HHHHH  HHHHHH  HH  HHHHH\n");
+	printf("\tHH    HH   HH HH   HH HH  HH HH     HH   HH  H HH\n");
+	printf("\tHH    HH   HH HH   HH HHHHH  HHHHH  HHHHHH      HHHHH\n");
+	printf("\tHH    HH   HH HH   HH HH     HH     HH  HH          HH\n");
+	printf("\t HHHH  HHHHH   HHHHH  HH     HHHHH  HH   HH     HHHHH\n");
+	printf("\n");
+	printf("\n");
+	printf("\t\t\t   HHHH	 HHHHH\n");
+	printf("\t\t\t  HH    HH   HH\n");
+	printf("\t\t\t  HH	HH   HH\n");
+	printf("\t\t\t  HH	HH   HH\n");
+	printf("\t\t\t   HHHH	 HHHHH   \2 \n");
+	printf("\n");
+	printf("\t\t\tBringing the future today \2 \n");
+	printf("-------------------------------------------------------------");
+	printf("\n"); /*Cooper's co. logo and slogan*/
+     }
+int login () 
+{	
+	char setpassword[20] = "";
+    char userpassword[20] = "";
+    int pass_ans=0;
+    int cmp;   
+    FILE *passPtr;    
+    if ((passPtr = fopen("pass.txt","a+"))== NULL){
+    printf("Password File not Found!");
+    exit(EXIT_FAILURE);
+    }
+    else{
+    fscanf(passPtr,"%s",setpassword);
+    cmp = strcmp(setpassword,userpassword);         
+        if (cmp == 0){/*If file empty then this is skipped*/
+        printf("No Password Found\nEnter A New Password to be Set:\n");/*Accept user password*/
+        scanf("%s",setpassword);
+        fprintf(passPtr,"%s",setpassword);/*Write new password to file*/
+        system("cls");
+        printf("Password Set\n");
+        rewind(passPtr);/*Commit password to the file*/
+        pass_ans=1;
+        }/*End if */
+        else{
+        fscanf(passPtr,"%s",setpassword);
+        printf("Please Enter Your Password\n");             
+        scanf("%s",userpassword);             
+        cmp = strcmp(setpassword,userpassword);/*Compare passwords and return 0 if correct */
+             
+        if (cmp == 0){
+        system("cls");
+        pass_ans=1;
+            }/*End if */            
+        else{   
+            while (cmp != 0){ 
+            system("cls");
+            printf ("\t\t\tWELCOME TO COOPER'S CO. INVENTORY'\n\t\t\tBringing the future today\n") ;
+			printf ("-------------------------------------------------------------------------\n\n\n") ;
+            printf("Password is INCORRECT, PLease Try again\n\a");
+            printf("Enter your password\n");
+            scanf("%s",userpassword);
+            cmp = strcmp(setpassword,userpassword);
+            pass_ans=1;
+         	   }/*End while */
+    		}/*End else   */
+    	}/*End else*/
+	}/*End else */    
+    fclose(passPtr);/*Close pass.txt   */
+	printf("\a");
+	system("cls");
+return pass_ans  ;
+}
+	
+
+int menu () 
+{
+	int decision ;     
+   	printf ("\t\t\tWELCOME TO COOPER'S CO. INVENTORY'\n\t\t\tBringing the future today\n") ;
+	printf ("-------------------------------------------------------------------------\n") ;
+    printf("MAIN MENU\n\n1.\tProducts\n2.\tAlerts\n3.\tExit\n\n\n Enter Menu Option : ");
+    scanf("%d",&decision);
+              
+    if (decision > 0 && decision <= 4 ) {
+		switch (decision) {
+            case 1 :
+            system("cls");
+            product () ;
+            break ;                                                        
+			                                                
+            case 2 : 
+            system("cls");
+            alerts () ;
+            break;
+                                                      
+            case 3 :
+            system("cls");
+            printf ("\n\n\t\tGOOD BYE \2 \n\n");                                            
+            system ("PAUSE"); 
+            exit(1);
+                                                          
+            case '\n':
+       		case '\t':
+       		case ' ':
+        	break;                                                 
+            default : 
+		    system ("cls");
+        	printf ("\n\n\t\tThis choice is invalid....\n\n");
+                  getch();
+                  system("PAUSE");
+                  system ("cls");
+                  menu ();
+                  break ; 
+		}/* END SWITCH */		
+    } /* END IF */
+} /* END MENU */          
+/***********************************************************************
+Name: product
+Description:  In this menu the user can browse through the produce menu
+			  and choose between adding a products, searching for a product,
+			  updating a product, deleting a product and exiting.
+***********************************************************************/
+int product () 
+{ 
+	int prodecision ;
+	printf ("\t\t\tWELCOME TO COOPER'S CO. INVENTORY'\n\t\t\tBringing the future today\n") ;
+	printf ("-------------------------------------------------------------------------\n") ;
+	printf ("PRODUCTS MENU\n\n \n1.\tAdd \n2.\tSearch \n3.\tUpdate \n4.\tDelete \n5.\tReturn to main menu\n\n  Enter menu option : ");
+    scanf ("%d", &prodecision) ;
+	
+	if (prodecision > 0 && prodecision <= 6) {
+		switch (prodecision) {									
+		case 1 :
+		system("cls");
+		addproduct () ; 
+		break ;
+									
+		case 2 : 
+		system("cls");
+		viewproduct ();
+		break ; 
+											
+		case 3 : 
+		system("cls");
+		updproduct ();
+		break ; 
+											
+		case 4 : 
+		system("cls");
+		delproduct (); 
+		break ; 
+												
+		case 5 : 
+		system("cls");
+		menu ();
+		break;			
+											
+		case '\n' : /*ignore newlines, */
+        case '\t' : /* tabs */
+        case ' ' : /* and spaces in input */
+        break ;            	
+		/* display message if user does not select valid choice */				
+		default:
+		system ("cls");
+        printf ("\n\n\n\n\n\t\tThis choice is invalid....\n\n");
+        getch();
+        system("PAUSE");
+        system ("cls");
+        menu ();
+        break ;
+		} /* end switch */
+	} /* end if */											   
+} /* end function */
+/***********************************************************************
+Name: addproduct
+Description:  In this function the user is able to add a new product to
+			 the database. 
+***********************************************************************/
+int addproduct ()
+{	
+	int option ;
+	struct productdata apd; /* define one struct productdata variable */
+	struct productdata *pdPtr; /* define a pointer to a struct productdata */
+    FILE *cfPtr; /* coopers.dat file pointer */	
+	printf ("\t\t\tWELCOME TO COOPER'S CO. INVENTORY'\n\t\t\tBringing the future today\n") ;
+	printf ("-------------------------------------------------------------------------\n") ;
+	printf ("ADD PRODUCT \n\nEnter product id# : \n");
+	scanf ("%d", &apd.productID );
+	printf ("\nEnter Name of product : \n") ; 
+	scanf ("%s", &apd.productname) ;
+	printf ("\nEnter the quantity of product : \n");
+	scanf ("%d", &apd.quantity);
+	printf ("\nEnter minimum value : \n");
+	scanf ("%d", &apd.minimumvalue);
+	printf ("\nEnter price : $");
+	scanf ("%f", &apd.price);
+		
+	pdPtr = &apd ; /* assign address of aCard to cardPtr */		
+	
+	system ("cls");
+	printf ("\t\t\tWELCOME TO COOPER'S CO. INVENTORY'\n\t\t\tBringing the future today\n") ;
+	printf ("-------------------------------------------------------------------------\n") ;
+	printf ("\n\n\n Product ID \tProduct Name \tQuantity \tMinimum Value \tPrice\n" ) ;
+	printf(" %d \t\t%s \t\t%d \t\t%d \t\t $%f",apd.productID,apd.productname,apd.quantity,apd.minimumvalue,apd.price );
+	printf ("\n\n\n OPTIONS \n\n1.save & exit\t\t 2.cancel\n\nChoose an option: ");	
+	scanf ("%d", &option);	
+		if (option == 1 ) {							
+			/* fopen opens the file; exits if file cannot be opened */
+			if ( ( cfPtr = fopen( "coopers.dat", "w+" )) == NULL ) {
+			printf( "File could not be opened\n" );
+ 			} /* end if */
+			else {					 
+			printf ("\n\n\n Product ID \tProduct Name \tQuantity \tMinimum Value \tPrice\n" ) ;		    	
+			fprintf (cfPtr ," %d \t\t%s \t\t%d \t\t%d \t\t $%f",apd.productID,apd.productname,apd.quantity,apd.minimumvalue,apd.price ); /*writes information to database*/			   				   		
+			fclose( cfPtr );	/* fclose closes the file */
+			} /*end else*/				
+			system ("cls");	printf ("\t\t\tWELCOME TO COOPER'S CO. INVENTORY'\n\t\t\tBringing the future today\n") ;
+			printf ("-------------------------------------------------------------------------\n") ;
+			printf (" \n\n\n\t\t\tSAVED\n\n  ") ;
+			system ("PAUSE");
+			system ("cls");
+			menu () ; 
+		}
+		else 
+		{			
+		system ("cls");
+		product ();	
+		}  /* end if  */
+} /* end function  */ 
+
+/***********************************************************************
+Name: viewproduct
+Description:  In this function the user is able to view all products
+			  listen in the database.
+***********************************************************************/
+int viewproduct () {	
+	int proid ;
+	char proname [30] ; 
+	int option ;
+	int option2 ; 
+	int option3 ; 
+	int option4 ; 
+	struct productdata apd; /* define one struct productdata variable */
+	struct productdata *pdPtr; /* define a pointer to a struct productdata */
+    FILE *cfPtr; /* coopers.dat file pointer */
+		
+	printf ("\t\t\tWELCOME TO COOPER'S CO. INVENTORY'\n\t\t\tBringing the future today \2 \n") ;
+	printf ("-------------------------------------------------------------------------\n") ;
+	printf ("SEARCH \n\n1.\t View all\n2.\t Exit\n3.\t Return to main menu\n\n Enter an option : ") ; 
+	scanf ("%d", &option);
+	if (option >0 && option <= 3) {
+		switch (option) {	
+			case 1 :
+			system ("cls");
+			printf ("\t\t\tWELCOME TO COOPER'S CO. INVENTORY'\n\t\t\tBringing the future today\n") ;
+			printf ("-------------------------------------------------------------------------\n") ;							
+			/* fopen opens the file; exits if file cannot be opened */
+			if ( ( cfPtr = fopen( "coopers.dat", "r+" )) == NULL ) {
+			printf( "File could not be opened\n" );
+ 			/* end if */
+			system("pause");
+            viewproduct();
+     		}
+     		else
+  			{
+  			printf ("\n Product ID \tProduct Name \tQuantity \tMinimum Value \tPrice\n" ) ;	
+  			/*read data from file*/
+  			fscanf (cfPtr ," %d \t\t%s \t\t%d \t\t%d \t\t $%f",&apd.productID,&apd.productname,&apd.quantity,&apd.minimumvalue,&apd.price );  
+    		printf(" %d \t\t%s \t\t%d \t\t%d \t\t $%f",apd.productID,apd.productname,apd.quantity,apd.minimumvalue,apd.price );
+			fscanf(cfPtr," %d %s %d %d  %f",&apd.productID,&apd.productname,&apd.quantity,&apd.minimumvalue,&apd.price );    			
+    		fclose( cfPtr) ; /* fclose closes the file */
+    		} /* end else */    					
+			printf ( "\n\n OPTIONS\n\n1.\tExit \n2.\tReturn to main menu \n\n\t Enter an option : ") ;
+			scanf ( "%d", &option4) ;					
+			if (option4 == 1 || option4 == 2) {
+				switch (option4) {	
+				case 1 :
+				system ("cls");
+				viewproduct () ;
+				break ; 		
+				case 2 :
+	 			system ("cls");
+				menu () ; 
+				break ; 	 	
+				/* display message if user does not select valid choice */
+				default:
+				system ("cls");
+                printf ("\n\n\n\n\n\t\tThis choice is invalid....\n\n");
+                getch();
+                system("PAUSE");
+                system ("cls");
+                main();
+            	break;            
+            	case '\n' : /*ignore newlines, */
+          		case '\t' : /* tabs */
+  	        	case ' ' : /* and spaces in input */
+ 	         	break ;                                          	
+                } /* end switch*/	
+			} /* end if */
+		case 2 :
+		system ("cls");
+		product () ;
+		break ;
+							
+		case 3 : 
+		system ("cls");
+		menu () ;
+		break ; 							
+		/* display message if user does not select valid choice */
+		default:
+		system ("cls");
+        printf ("\n\n\n\n\n\t\tThis choice is invalid....\n\n");
+        getch();
+    	system("PAUSE");
+        system ("cls");
+        main();
+        break;            
+        case '\n' : /*ignore newlines, */
+        case '\t' : /* tabs */
+  	    case ' ' : /* and spaces in input */
+ 	    break ;  
+		} /* end switch  */
+	} /* end if  */	
+}
+
+/***********************************************************************
+Name: updproduct
+Description:  In this function the user is able to edit the products
+			  information. 
+***********************************************************************/
+int updproduct () {
+	int proid ;
+	int option ;
+	float nprice ;
+	int option2 ;
+	int nmin ;
+	int option3 ;
+	struct productdata apd; /* define one struct productdata variable */
+	struct productdata *pdPtr; /* define a pointer to a struct productdata */
+    FILE *cfPtr; /* coopers.dat file pointer */
+		
+	printf ("\t\t\tWELCOME TO COOPER'S CO. INVENTORY'\n\t\t\tBringing the future today\n") ;
+	printf ("-------------------------------------------------------------------------\n") ;
+	printf("UPDATE PRODUCT\n\nEnter product ID: ") ; 
+	scanf ("%d" , &proid) ;
+	
+	/* fopen opens the file; exits if file cannot be opened */
+	if((cfPtr=fopen("coopers.dat","r+"))== NULL) {
+	printf( "File could not be opened.\n" );	
+	}
+    else {
+    	while (!feof(cfPtr)) {    	
+		fscanf(cfPtr, " %d ",&apd.productID); /*search database for product*/
+    		if ( proid == apd.productID ) { /* compares the ID to see if it match*/  
+    		printf ("\n Product ID \tProduct Name \tQuantity \tMinimum Value \tPrice\n" ) ;	  					
+  			fscanf (cfPtr ," %d \t\t%s \t\t%d \t\t%d \t\t $%f",&apd.productID,&apd.productname,&apd.quantity,&apd.minimumvalue,&apd.price );  
+    		printf(" %d \t\t%s \t\t%d \t\t%d \t\t $%f",apd.productID,apd.productname,apd.quantity,apd.minimumvalue,apd.price );
+			fscanf(cfPtr," %d %s %d %d  %f",&apd.productID,&apd.productname,&apd.quantity,&apd.minimumvalue,&apd.price ); 				  		
+			printf ("\n\nOPTIONS\n1.\tChange price\n2.\tExit\n3.\tReturn to main menu\n\n\t Enter an option : ");
+			scanf ("%d", &option ) ;	 
+			if (option >0 || option <=3 )
+			{		
+				switch (option) 
+				{			
+				case 1 : 
+				system ("cls");
+				printf ("\t\t\tWELCOME TO COOPER'S CO. INVENTORY'\n\t\t\tBringing the future today\n") ;
+				printf ("-------------------------------------------------------------------------\n") ;
+				printf ("\n Product ID \tProduct Name \tQuantity \tMinimum Value \tPrice\n" ) ;	  					
+  				fscanf(cfPtr," %d %s %d %d  %f",&apd.productID,&apd.productname,&apd.quantity,&apd.minimumvalue,&apd.price );    			
+        		printf(" %d \t\t%s \t\t%d \t\t%d \t\t $%f",apd.productID,apd.productname,apd.quantity,apd.minimumvalue,apd.price );
+				fscanf(cfPtr," %d %s %d %d  %f",&apd.productID,&apd.productname,&apd.quantity,&apd.minimumvalue,&apd.price ); 
+				printf ("UPDATE PRICE\n\nEnter new price: ") ;
+				scanf ("%f", &apd.price);
+				printf ("\n\nOPTIONS\n\n1. Confirm & exit\n2. Exit without saving\n\n\t Choose an option : ") ;
+				scanf ("%d", &option2);		
+				if (option2 == 1 || option2 == 2) {
+				switch (option2) {			
+				case 1 : 				
+  				while(!feof(cfPtr)){								
+        		printf( " %f ",&apd.price);								 
+				fscanf(cfPtr, " %f ",&apd.price);/*writes data to file*/       				
+    			}
+    			fclose( cfPtr) ; /* fclose closes the file */    		 				  		 		
+    		 	printf (" \n\n\t\t SAVED \n\n") ;     		 					
+    		 	printf ("\n Product ID \tProduct Name \tQuantity \tMinimum Value \tPrice\n" ) ;	  					
+  				fscanf(cfPtr," %d %s %d %d  %f",&apd.productID,&apd.productname,&apd.quantity,&apd.minimumvalue,&apd.price );    			
+        		printf(" %d \t\t%s \t\t%d \t\t%d \t\t $%f",apd.productID,apd.productname,apd.quantity,apd.minimumvalue,apd.price );
+				fscanf(cfPtr," %d %s %d %d  %f",&apd.productID,&apd.productname,&apd.quantity,&apd.minimumvalue,&apd.price ); 
+				system ("PAUSE") ;
+				system ("cls") ;
+				product();
+				break;
+				
+				case 2 :  
+				system ("cls") ; 
+	        	product () ;
+				break ;
+				/* display message if user does not select valid choice */
+			
+				default:
+				system ("cls");
+                printf ("\n\n\n\n\n\t\tThis choice is invalid....\n\n");
+                getch();
+                system("PAUSE");
+                system ("cls");
+                main();
+            	break;           
+            	case '\n' : /*ignore newlines, */
+          		case '\t' : /* tabs */
+  	        	case ' ' : /* and spaces in input */
+ 	         	break ;  
+				} /* end switch  */
+				} /* end if  */		
+	     		case 2 : 
+				system ("cls") ; 
+				product () ; 
+				break ; 
+			
+				case 3 : 
+				system ("cls") ; 
+				menu () ;
+				break ;
+					
+				/* display message if user does not select valid choice */
+				default:
+				system ("cls");
+               	printf ("\n\n\n\n\n\t\tThis choice is invalid....\n\n");
+                getch();
+                system("PAUSE");
+                system ("cls");
+                main();
+            	break;            
+            	case '\n' : /*ignore newlines, */
+          		case '\t' : /* tabs */
+  	        	case ' ' : /* and spaces in input */
+ 	         	break ; 				    
+					} /* end switch  */
+				} /* end if  */					
+				else 
+				{
+				printf ("\n\n\ Product not found") ;
+				system("PAUSE");
+                system ("cls");
+                menu () ;
+				}
+			}/*end if */
+		}/*end if */		
+   }/*end function*/
+}
+
+/***********************************************************************
+Name: delproduct
+Description:  In this function the user is able to delete the product
+			  from the database.
+***********************************************************************/
+int delproduct (){	
+	int proid ;
+	int option ; 
+	struct productdata apd; /* define one struct productdata variable */
+	struct productdata *pdPtr; /* define a pointer to a struct productdata */
+    FILE *cfPtr; /* coopers.dat file pointer */    
+	printf ("\t\t\tWELCOME TO COOPER'S CO. INVENTORY'\n\t\t\tBringing the future today\n") ;
+	printf ("-------------------------------------------------------------------------\n") ;
+	printf ("DELETE PRODUCT\n\nEnter product ID: ") ; 
+	scanf ("%d" , &proid) ;	
+	/* fopen opens the file; exits if file cannot be opened */
+	if((cfPtr=fopen("coopers.dat","r+"))== NULL) {
+	printf( "File could not be opened.\n" );	
+	}
+    else {
+    	while (!feof(cfPtr)) {    	
+		fscanf(cfPtr, " %f ",&apd.productID); /*search file for product*/
+    		if (apd.productID == proid) { /* compares ID for a match */
+			printf ("\n\nAre you sure you want to delete this product ? \n\n1.Save & exit\t\t 2.Cancel\n \n\nChoose an option: ");	
+			scanf ("%d", &option);
+			if (option ==1||option==2) {
+				switch (option) {						
+                case 1 :							
+				/* fopen opens the file; exits if file cannot be opened */	
+			    if((cfPtr=fopen("coopers.dat","r+"))== NULL) {
+				printf(" \n******Their is no file to view******\n\n");
+            	system("pause");
+            	delproduct();
+     			}
+     			else {     							
+  				fscanf(cfPtr, " %d ",&apd.productID);
+    			fclose( cfPtr) ; /* fclose closes the file */
+    		 	}
+				system ("cls");
+				printf ("\t\t\tWELCOME TO COOPER'S CO. INVENTORY'\n\t\t\tBringing the future today\n") ;
+				printf ("-------------------------------------------------------------------------\n") ;
+				printf (" \n\n\n\t\tSAVED\n\n") ;
+				system ("PAUSE");
+				system ("cls");
+				menu () ; 
+				break ; 
+		
+				case 2 : 
+				system ("cls");
+				product ();
+				break ; 	
+				/* display message if user does not select valid choice */
+				default:
+				system ("cls");
+               	printf ("\n\n\n\n\n\t\tThis choice is invalid....\n\n");
+                getch();
+                system("PAUSE");
+                system ("cls");
+                main();
+            	break;            
+            	case '\n' : /*ignore newlines, */
+          		case '\t' : /* tabs */
+  	        	case ' ' : /* and spaces in input */
+ 	         	break ;  					    
+					}/* end switch  */
+				} /* end if  */	
+			}/*end switch*/
+		}/*end if*/		
+	}
+}
+/*end function*/
+/***********************************************************************
+Name: alerts
+Description:  In this function the user is able to view product alerts to  
+				see if products are running low and need to be reordered.			  
+***********************************************************************/
+int alerts () {	
+	int option4 ; 
+	int minimumvalue = 20 ;
+	struct productdata apd; /* define one struct productdata variable */
+	struct productdata *pdPtr; /* define a pointer to a struct productdata */
+    FILE *cfPtr; /* coopers.dat file pointer */	
+	printf ("\t\t\tWELCOME TO COOPER'S CO. INVENTORY'\n\t\t\tBringing the future today\n") ;
+	printf ("-----------------------------------------------------------------------------\n") ;	
+	/* fopen opens the file; exits if file cannot be opened */
+	if((cfPtr=fopen("coopers.dat","r"))== NULL) {	 			
+        printf(" \n******Their is no file to view******\n\n");
+        system("pause");
+        menu ();
+    }
+     	else{
+  		fscanf(cfPtr," %d",&apd.minimumvalue ); /*searches database for low quantity products*/
+  			if (apd.minimumvalue <= minimumvalue ) { /*checks to see if product at minimum level*/  			
+			printf ("\n Product ID \tProduct Name \tQuantity \tMinimum Value \tPrice\n" ) ;    		
+        	printf("%d \t\t%s \t\t%d \t\t%d \t\t $%f",apd.productID,apd.productname,apd.quantity,apd.minimumvalue,apd.price );
+        	fprintf (cfPtr ," %d \t\t%s \t\t%d \t\t%d \t\t $%f",&apd.productID,&apd.productname,&apd.quantity,&apd.minimumvalue,&apd.price );
+       		printf ( "\n\nPRODUCT IS LOW IN QUANTITY, REORDER NOW");    	
+    		fclose( cfPtr) ;  /* fclose closes the file */
+    		}  
+			else {
+			printf("\n\n\t\t\tThere is no out of stock product") ; 
+			}  					
+			printf ( "\n\n OPTIONS\n\n1.\tExit \n2.\tReturn to main menu \n\n\t Enter an option : ") ;
+			scanf ( "%d", &option4) ;					
+				if (option4 == 1 || option4 == 2) {
+					switch (option4) {	
+					case 1 :
+					system ("cls");
+					menu ();
+					break ; 		
+					case 2 :
+	 				system ("cls");
+					menu () ; 
+					break ; 	 	
+					/* display message if user does not select valid choice */
+					default:
+					system ("cls");
+               		printf ("\n\n\n\n\n\t\tThis choice is invalid....\n\n");
+                	getch();
+                	system("PAUSE");
+                	system ("cls");
+                	main();
+            		break;            
+            		case '\n' : /*ignore newlines, */
+          			case '\t' : /* tabs */
+  	        		case ' ' : /* and spaces in input */
+ 	         		break ; 						    
+					} /* end switch  */
+				} /* end if  */		
+		}	
+}
+
+
+
+
+
